@@ -1,0 +1,7 @@
+/.settings/
+/target/
+/.classpath
+/.project
+/loadbook-web-application-server2.iml
+/.idea/
+/tomcat.8080/
