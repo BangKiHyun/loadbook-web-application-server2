@@ -1,4 +1,4 @@
-package next.web;
+package next.controller;
 
 import core.db.DataBase;
 import next.model.User;
@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/user/create")
-public class CreateUserServlet extends HttpServlet {
+@WebServlet("/users/create")
+public class CreateUserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = new User(
@@ -21,6 +21,6 @@ public class CreateUserServlet extends HttpServlet {
                 req.getParameter("email"));
 
         DataBase.addUser(user);
-        resp.sendRedirect("/user/list");
+        resp.sendRedirect("/users/list");
     }
 }
