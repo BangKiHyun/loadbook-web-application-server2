@@ -2,7 +2,9 @@ package next.controller;
 
 import core.db.DataBase;
 import next.model.User;
+import next.util.UserSessionUtils;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,27 +13,32 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("users/login")
+@WebServlet(value = {"users/login", "users/loginForm"})
 public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = DataBase.findUserById(req.getParameter("userId'"));
-        if(!isLogined(user, req)){
+        forward("user/login.jsp", req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String userId = req.getParameter("userId");
+        String password = req.getParameter("password");
+        User user = DataBase.findUserById(userId);
+
+        if (user == null || !user.matchPassword(password)) {
             req.setAttribute("loginFailed", true);
+            forward("/users/login.jsp", req, resp);
             return;
         }
 
         HttpSession session = req.getSession();
-        if(session == null){
-            session.setAttribute("user", user);
-        }
-
+        session.setAttribute(UserSessionUtils.USER_SESSION_KEY, user);
         resp.sendRedirect("/");
     }
 
-    private boolean isLogined(User user, HttpServletRequest req) {
-        return user != null &&
-                req.getParameter("userId").equals(user.getUserId()) &&
-                req.getParameter("password").equals(user.getPassword());
+    private void forward(String forwardUrl, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher rd = req.getRequestDispatcher(forwardUrl);
+        rd.forward(req, resp);
     }
 }
