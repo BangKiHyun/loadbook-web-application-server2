@@ -1,7 +1,9 @@
 package next.controller;
 
 import core.db.DataBase;
+import core.mvc.Controller;
 import next.model.User;
+import next.util.UserSessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,17 +16,12 @@ public class UpdateFormController implements Controller {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = DataBase.findUserById(request.getParameter("userId"));
+        if (!UserSessionUtils.isSameUser(request.getSession(), user)) {
+            throw new IllegalStateException("다른 사용자의 정보를 수정할 수 없습니다.");
+        }
 
-        User updateUser = new User(
-                request.getParameter("userId"),
-                request.getParameter("password"),
-                request.getParameter("name"),
-                request.getParameter("email"));
+        request.setAttribute("user", user);
 
-        user.update(updateUser);
-
-        request.setAttribute("uesr", user);
-
-        return "redirect:.users.list";
+        return "users/updateForm.jsp";
     }
 }

@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="kr">
 <head>
-    <%@ include file="/src/webapp/include/header.jspf" %>
+    <%@ include file="/webapplude/header.jspf" %>
 </head>
 <body>
 <%@ include file="/src/webapp/include/navigation.jspf" %>
