@@ -8,21 +8,23 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class CreateUserController implements Controller {
-    private static final long serialVersionUID = 1L;
-    private static final Logger log = LoggerFactory.getLogger(CreateUserController.class);
+public class UpdateFormController implements Controller {
+    private static final Logger log = LoggerFactory.getLogger(UpdateFormController.class);
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        User user = new User(
+        User user = DataBase.findUserById(request.getParameter("userId"));
+
+        User updateUser = new User(
                 request.getParameter("userId"),
                 request.getParameter("password"),
                 request.getParameter("name"),
                 request.getParameter("email"));
-        log.debug("User : {}", user);
 
-        DataBase.addUser(user);
+        user.update(updateUser);
 
-        return "redirect:/";
+        request.setAttribute("uesr", user);
+
+        return "redirect:.users.list";
     }
 }

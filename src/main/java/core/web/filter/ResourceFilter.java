@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogRecord;
 
 @WebServlet("/*")
 public class ResourceFilter implements Filter {
@@ -24,11 +23,11 @@ public class ResourceFilter implements Filter {
         resourcePrefixs.add("/favicon.ico");
     }
 
-    private RequestDispatcher defaltRequestDispatcher;
+    private RequestDispatcher defaultRequestDispatcher;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.defaltRequestDispatcher = filterConfig.getServletContext().getNamedDispatcher("default");
+        this.defaultRequestDispatcher = filterConfig.getServletContext().getNamedDispatcher("default");
     }
 
     @Override
@@ -37,7 +36,7 @@ public class ResourceFilter implements Filter {
         String path = req.getRequestURI().substring(req.getContextPath().length());
         if (isResourceUrl(path)) {
             logger.debug("path : {}", path);
-            defaltRequestDispatcher.forward(request, response);
+            defaultRequestDispatcher.forward(request, response);
         } else {
             chain.doFilter(request, response);
         }
