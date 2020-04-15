@@ -15,7 +15,7 @@ import javax.servlet.annotation.WebListener;
 public class ContextLoaderListener implements ServletContextListener {
     private static final Logger logger = LoggerFactory.getLogger(ContextLoaderListener.class);
 
-    @Override
+    @Override //서버가 시작 할 때 호출하는 메소드, 초기화 작업을 할 수 있다.
     public void contextInitialized(ServletContextEvent sce) {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("jwp.sql"));
