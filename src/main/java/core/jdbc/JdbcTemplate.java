@@ -1,21 +1,18 @@
 package core.jdbc;
 
-import next.model.User;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public abstract class UpdateJdbcTemplate {
-    public void update(User user) throws SQLException {
+public abstract class JdbcTemplate {
+    public void execute(String sql) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         try {
             con = ConnectionManager.getConnection();
-            String sql = this.createQueryForUpdate();
             pstmt = con.prepareStatement(sql);
 
-            this.setValuesForUpdate(user, pstmt);
+            this.setValues(pstmt);
 
             pstmt.executeUpdate();
         } finally {
@@ -29,7 +26,5 @@ public abstract class UpdateJdbcTemplate {
         }
     }
 
-    public abstract void setValuesForUpdate(User user, PreparedStatement pstmt) throws SQLException;
-
-    public abstract String createQueryForUpdate();
+    public abstract void setValues(PreparedStatement pstmt) throws SQLException;
 }
