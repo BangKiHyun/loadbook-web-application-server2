@@ -38,12 +38,16 @@
      - update(User, UserDao) : void
 3. InsertJdbcTemplate과 UpdateJdbcTemplate이 UserDao에 대한 의존관계를 끊는다.
    - setValuesForInsert()와 createQueryForInsert()를 추상 메소드로 구현하고
-     UserDao와 insert() 메소드에서 이 2개의 추상 메소드를 구현하도록 한다.
+     UserDao의 insert() 메소드에서 이 2개의 추상 메소드를 구현하도록 한다.
    - insert() 메소드에서 *익명 클래스로 구현하도록 한다.
-4. InsertJdbcTemplage과 UpdateJdbcTemplate의 구현 부분중 하나를 사용하도록 리펙토링한다.
+4. InsertJdbcTemplate과 UpdateJdbcTemplate의 구현 부분중 하나를 사용하도록 리펙토링한다.
    - setValues()와 createQuery() 메소드로 Rename 리팩토링한다.
    - 두 클래스는 같기 때문에 둘 중 하나를 삭제하고 클래스 하나만 사용하나
      JdbcTemplate.class
+5. JdbcTemplate은 User와 의존관계를 가지기 때문에 다른 DAO 클래스에서 재사용할 수 없다.
+   User와 의존관계를 끊는다.
+   - User 값은 UserDao에서만 사용되기 때문에 SQL 쿼리와 같이 변경되는 부분을
+     추상 메소드가 아닌 메소드의 인자로 전달한다.
 
 
 
