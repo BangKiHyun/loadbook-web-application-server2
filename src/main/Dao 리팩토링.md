@@ -1,0 +1,73 @@
+## Dao 리팩토링
+
+### JDBC 코드의 중복 제거하기
+
+- 중복 코드를 리펙토링하기 전 분리 작업 실시
+- 변화가 발생하는 부분(개발자가 구현할 수 밖에 없는 부분)과
+  변화가 없는 부분(공통 라이브러리로 분리할 부분)을 분리하자
+
+| 작업             | 공통 라이브러리 | 개발자가 구현할 부분 |
+| :--------------- | :-------------: | :------------------: |
+| Connection 관리  |        O        |          X           |
+| SQL              |        X        |          O           |
+| Statement 관리   |        O        |          X           |
+| ResultSet 관리   |        O        |          X           |
+| Row 데이터 추출  |        X        |          O           |
+| 파라미터 선언    |        X        |          O           |
+| 파라미터 Setting |        O        |          X           |
+| 트랜잭션 관리    |        O        |          X           |
+
+
+
+### 리팩토링
+
+1. Insert, Update 쿼리의 중복 제거 작업 실행
+   변하는 부분과 변하지 않는 부분을 Extract Method 리팩토링을 통해 분리한다.
+   - insert(User) : void
+   - setValuesForInsert(User, PreparedStatement) : void
+   - createQueryForInsert(User, PreparedStatement) : String
+   - update(User) : void
+   - setValuesForUpdate0() : void
+   - createQueryForUpdate() : String
+   - findAll() : List<User>
+   - findByUserId(String) User
+2. 분리한 메소드 중에서 변화가 발생하지 않는 부분(공통 라이브러리)을 새로운 클래스로 추가한 후 이동한다.
+   - InsertJdbcTemplate 클래스
+     - insert(User, UserDao) : void
+   - UpdateJdbcTemplate 클래스
+     - update(User, UserDao) : void
+3. InsertJdbcTemplate과 UpdateJdbcTemplate이 UserDao에 대한 의존관계를 끊는다.
+   - setValuesForInsert()와 createQueryForInsert()를 추상 메소드로 구현하고
+     UserDao와 insert() 메소드에서 이 2개의 추상 메소드를 구현하도록 한다.
+   - insert() 메소드에서 *익명 클래스로 구현하도록 한다.
+4. InsertJdbcTemplage과 UpdateJdbcTemplate의 구현 부분중 하나를 사용하도록 리펙토링한다.
+   - setValues()와 createQuery() 메소드로 Rename 리팩토링한다.
+   - 두 클래스는 같기 때문에 둘 중 하나를 삭제하고 클래스 하나만 사용하나
+     JdbcTemplate.class
+
+
+
+
+
+### 익명 클래스(Anonymous Class)
+
+- 클래스의 선언과 객체의 생성을 동시에 하기 때문에 단 한 번만 사용될 수 있고, 오직 하나의 객체만 생성할 수 있는 **일회용 클래스**
+  즉, 인터페이스를 구현하기 위해 해당 인터페이스를 구현한 **클래스를 생성**할 때 **일회성이고 재사용할 필요가 없을때 사용**한다.
+- 이름이 없기 때문에 생성자를 가질수 없다.
+- 단 하나의 클래스를 상속받거나 단 하나의 인터페이스만을 구현할 수 있다.
+- 하나의 클래스로 상속받는 동시에 인터페이스를 구현하거나 둘 이상의 인터페이스를 구현할 수 없다.
+
+```
+interface Test{
+    public void go();
+}
+
+public class sampleClass{
+	Test anonymousTest = new Test(){
+        public void go(){
+            System.out.println("Anonymous Class!");
+        }
+    };
+    test.go();
+}
+```
