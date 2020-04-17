@@ -63,6 +63,17 @@
    - findAll() 메소드에서 setValues(PreparedStatement) 는 사용할 필요가 없다.
      위와 같은 상황이 빈번히 발생하게 된다면 분리를 하겠지만
      한 두번 일어나는 상황이라면 throw new UnsupportedOperationException() 예외를 던져 사용하지 못하게 할 것 같다.(이건 그냥 내 의견)
+7. JdbcTemplate과 SelectJdbcTemplate의 중복 코드를 한 클래스로 통합하여 중복 제거하기
+   - JdbcTemplate.class
+     - excute(String) : void
+     - query(String) : List
+     - queryForObject(String) : Object
+     - mapRow(ResultSet) : Object
+     - setValues(PreparedStatemnent) : void
+8. 7번과 같이 했을때의 문제점
+   - 불필요한 mapRow() 와 setValues() 메소드를 반드시 구현하는 부분이 있다.
+     2개의 메소드를 분리해 독립적으로 전달할 수 있도록 만들자
+   - PreparedStatementSetter(), RowMapper() 인터페이스를 추가해서 구현해라
 
 
 
