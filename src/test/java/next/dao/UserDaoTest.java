@@ -43,7 +43,7 @@ public class UserDaoTest {
         User actual = userDao.findByUserId(extra.getUserId());
         assertEquals(extra, actual);
 
-        List<Object> users = userDao.findAll();
+        List<User> users = userDao.findAll();
         assertEquals(2, users.size());
     }
 }

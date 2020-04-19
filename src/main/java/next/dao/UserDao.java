@@ -16,18 +16,15 @@ import java.util.List;
 public class UserDao {
     private static final Logger log = LoggerFactory.getLogger(UserDao.class);
 
-    private RowMapper rowMapper = new RowMapper() {
+    public RowMapper<User> rowMapper = new RowMapper() {
         @Override
-        public Object mapRow(ResultSet rs) throws SQLException {
-
-            Object user = new User(
+        public User mapRow(ResultSet rs) throws SQLException {
+            return new User(
                     rs.getString("userId"),
                     rs.getString("password"),
                     rs.getString("name"),
                     rs.getString("email")
             );
-
-            return user;
         }
     };
 
@@ -62,7 +59,7 @@ public class UserDao {
     }
 
     public User findByUserId(String userId) throws SQLException {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate<User> jdbcTemplate = new JdbcTemplate();
         PreparedStatementSetter pstmtSetter = new PreparedStatementSetter() {
             @Override
             public void values(PreparedStatement pstmt) throws SQLException {
@@ -70,14 +67,12 @@ public class UserDao {
             }
         };
         String sql = "SELECT userId, password, name, email FROM USERS WHERE userId=?";
-        return (User) jdbcTemplate.queryForObject(sql, pstmtSetter, rowMapper);
+        return jdbcTemplate.queryForObject(sql, pstmtSetter, rowMapper);
     }
 
-    public List<Object> findAll() throws SQLException {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
-
+    public List<User> findAll() throws SQLException {
+        JdbcTemplate<User> jdbcTemplate = new JdbcTemplate();
         String sql = "SELECT * FROM USERS";
-
         return jdbcTemplate.query(sql, rowMapper);
     }
 }
