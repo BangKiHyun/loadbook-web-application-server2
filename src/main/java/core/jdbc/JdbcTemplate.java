@@ -1,5 +1,6 @@
 package core.jdbc;
 
+import next.model.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,29 @@ public class JdbcTemplate<T> {
                 PreparedStatement pstmt = con.prepareStatement(sql);
         ) {
             pstmtSetter.values(pstmt);
+            rs = pstmt.executeQuery();
+            rs.next();
+            return rowMapper.mapRow(rs);
+        } catch (SQLException e) {
+            throw new DataAccessException(e.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    throw new DataAccessException(e.getMessage());
+                }
+            }
+        }
+    }
+
+    public <T> T queryForObject(String sql, RowMapper<T> rowMapper, long answerId) throws DataAccessException {
+        ResultSet rs = null;
+        try (
+                Connection con = ConnectionManager.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(sql);
+        ) {
+            pstmt.setLong(1, answerId);
             rs = pstmt.executeQuery();
             rs.next();
             return rowMapper.mapRow(rs);
