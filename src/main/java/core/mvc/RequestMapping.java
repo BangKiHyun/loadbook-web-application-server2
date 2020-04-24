@@ -2,6 +2,7 @@ package core.mvc;
 
 import next.controller.*;
 import next.controller.qna.AddAnswerController;
+import next.controller.qna.DeleteAnswerController;
 import next.controller.qna.ShowController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class RequestMapping {
         mappings.put("/users/update", new UpdateUserController());
         mappings.put("/qna/show", new ShowController());
         mappings.put("/api/qna/addAnswer", new AddAnswerController());
+        mappings.put("/api/qna/deleteAnswer", new DeleteAnswerController());
         log.info("Initialized Request Mapping!");
     }
 

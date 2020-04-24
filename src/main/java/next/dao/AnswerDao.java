@@ -2,8 +2,10 @@ package next.dao;
 
 import core.jdbc.*;
 import next.model.Answer;
+import next.model.Question;
 
 import java.sql.*;
+import java.util.List;
 
 public class AnswerDao {
 
@@ -39,5 +41,42 @@ public class AnswerDao {
         };
 
         return jdbcTemplate.queryForObject(sql, rowMapper, answerId);
+    }
+
+    public void delete(long answerId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "DELETE ANSWERS WHERE answerId = ?";
+        PreparedStatementSetter pstmtSetter = new PreparedStatementSetter() {
+            @Override
+            public void values(PreparedStatement pstmt) throws SQLException {
+                pstmt.setLong(1, answerId);
+            }
+        };
+
+        jdbcTemplate.execute(sql, pstmtSetter);
+    }
+
+    public List<Answer> findAllByQuestionId(Long questionId) {
+        JdbcTemplate<List> jdbcTemplate = new JdbcTemplate<>();
+        String sql = "SELECT * FROM ANSWERS WHERE questionId = ?";
+        PreparedStatementSetter pstmtSetter = new PreparedStatementSetter() {
+            @Override
+            public void values(PreparedStatement pstmt) throws SQLException {
+                pstmt.setLong(1, questionId);
+            }
+        };
+
+        RowMapper<Answer> rowMapper = new RowMapper<Answer>() {
+            @Override
+            public Answer mapRow(ResultSet rs) throws SQLException {
+                return new Answer(rs.getLong("answerId"),
+                        rs.getString("writer"),
+                        rs.getString("contents"),
+                        rs.getTimestamp("createdDate"),
+                        questionId);
+            }
+        };
+
+        return jdbcTemplate.query(sql,rowMapper, pstmtSetter);
     }
 }
