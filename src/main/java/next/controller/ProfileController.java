@@ -2,6 +2,8 @@ package next.controller;
 
 import core.db.DataBase;
 import core.mvc.Controller;
+import core.view.JspView;
+import core.view.VIew;
 import next.model.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +13,7 @@ public class ProfileController implements Controller {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public VIew execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String userId = request.getParameter("userId");
         User user = DataBase.findUserById(userId);
         if (user == null) {
@@ -20,6 +22,6 @@ public class ProfileController implements Controller {
 
         request.setAttribute("user", user);
 
-        return "/users/profile.jsp";
+        return new JspView("/users/profile.jsp");
     }
 }

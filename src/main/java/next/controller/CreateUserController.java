@@ -2,6 +2,8 @@ package next.controller;
 
 import core.db.DataBase;
 import core.mvc.Controller;
+import core.view.JspView;
+import core.view.VIew;
 import next.dao.UserDao;
 import next.model.User;
 import org.slf4j.Logger;
@@ -15,7 +17,7 @@ public class CreateUserController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(CreateUserController.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public VIew execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = new User(
                 request.getParameter("userId"),
                 request.getParameter("password"),
@@ -31,6 +33,6 @@ public class CreateUserController implements Controller {
             log.error(e.getMessage());
         }
 
-        return "redirect:/";
+        return new JspView("redirect:/");
     }
 }

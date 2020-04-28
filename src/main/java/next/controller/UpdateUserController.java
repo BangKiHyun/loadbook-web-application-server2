@@ -2,6 +2,8 @@ package next.controller;
 
 import core.db.DataBase;
 import core.mvc.Controller;
+import core.view.JspView;
+import core.view.VIew;
 import next.model.User;
 import next.util.UserSessionUtils;
 import org.slf4j.Logger;
@@ -14,7 +16,7 @@ public class UpdateUserController implements Controller {
     private static final Logger log = LoggerFactory.getLogger(UpdateUserController.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public VIew execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String userId = request.getParameter("userId");
         User user = DataBase.findUserById(userId);
 
@@ -32,6 +34,6 @@ public class UpdateUserController implements Controller {
 
         user.update(updateUser);
 
-        return "redirect:/";
+        return new JspView("redirect:/");
     }
 }
