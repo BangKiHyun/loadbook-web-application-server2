@@ -1,31 +1,33 @@
 package next.controller;
 
-import core.db.DataBase;
-import core.mvc.Controller;
-import core.view.JspView;
-import core.view.VIew;
+import core.mvc.AbstractController;
+import core.view.ModelAndView;
+import next.dao.UserDao;
 import next.model.User;
-import next.util.UserSessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LoginController implements Controller {
+public class LoginController extends AbstractController {
+    private UserDao userDao = new UserDao();
 
     @Override
-    public VIew execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String userId = request.getParameter("userId");
         String password = request.getParameter("password");
-        User user = DataBase.findUserById(userId);
+        User user = userDao.findByUserId(userId);
 
-        if (user == null || !user.matchPassword(password)) {
-            request.setAttribute("loginFailed", true);
-            return new JspView("/users/login.jsp");
+        if (user == null) {
+            throw new NullPointerException("사용자를 찾을 수 없습니다.");
         }
 
-        HttpSession session = request.getSession();
-        session.setAttribute(UserSessionUtils.USER_SESSION_KEY, user);
-        return new JspView("redirect:/");
+        if (user.matchPassword(password)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            return jspView("redirect:/");
+        } else {
+            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+        }
     }
 }

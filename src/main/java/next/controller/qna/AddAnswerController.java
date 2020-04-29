@@ -1,17 +1,16 @@
 package next.controller.qna;
 
-import core.mvc.Controller;
-import core.view.JsonView;
-import core.view.VIew;
+import core.mvc.AbstractController;
+import core.view.ModelAndView;
 import next.dao.AnswerDao;
 import next.model.Answer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class AddAnswerController implements Controller {
+public class AddAnswerController extends AbstractController {
     @Override
-    public VIew execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Answer answer = new Answer(
                 request.getParameter("writer"),
                 request.getParameter("contents"),
@@ -22,6 +21,6 @@ public class AddAnswerController implements Controller {
         Answer saveAnswer = answerDao.insert(answer);
         request.setAttribute("answer", saveAnswer);
 
-        return new JsonView();
+        return jsonView().addObject("answer", saveAnswer);
     }
 }
