@@ -21,7 +21,7 @@ writer varchar(30) NOT NULL,
 title varchar(50) NOT NULL,
 contents varchar(5000) NOT NULL,
 createdDate timestamp NOT NULL,
-countOfAnswer int,
+countOfAnswer int AUTO_INCREMENT,
 PRIMARY KEY (questionId)
 );
 DROP TABLE ANSWERS;

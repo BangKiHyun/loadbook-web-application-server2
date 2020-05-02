@@ -1,5 +1,6 @@
 package core.mvc;
 
+import core.view.ModelAndView;
 import core.view.VIew;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,9 @@ public class DispatcherServlet extends HttpServlet {
 
         Controller controller = rm.findController(requestURI);
         try {
-            VIew vIew = controller.execute(req, resp);
-            vIew.render(req, resp);
+            ModelAndView mav = controller.execute(req, resp);
+            VIew view = mav.getvIew();
+            view.render(mav.getModel(), req, resp);
         } catch (Throwable e) {
             log.error("Exception : {}", e);
             throw new ServletException(e.getMessage());

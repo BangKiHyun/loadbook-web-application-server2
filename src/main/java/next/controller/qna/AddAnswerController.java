@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AddAnswerController extends AbstractController {
+    private AnswerDao answerDao = new AnswerDao();
+
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Answer answer = new Answer(
@@ -17,7 +19,6 @@ public class AddAnswerController extends AbstractController {
                 Long.parseLong(request.getParameter("questionId"))
         );
 
-        AnswerDao answerDao = new AnswerDao();
         Answer saveAnswer = answerDao.insert(answer);
         request.setAttribute("answer", saveAnswer);
 
