@@ -1,5 +1,7 @@
 package next.model;
 
+import next.util.UserSessionUtils;
+
 import java.util.Date;
 
 public class Question {
@@ -57,6 +59,15 @@ public class Question {
         return countOfComment;
     }
 
+    public boolean isSameUser(User user) {
+        return user.isSameUser(this.writer);
+    }
+
+    public void update(Question newQuestion){
+        this.title = newQuestion.title;
+        this.contents = newQuestion.contents;
+    }
+
     @Override
     public String toString() {
         return "Question [questionId=" + questionId + ", writer=" + writer + ", title=" + title + ", contents="
@@ -84,4 +95,6 @@ public class Question {
             return false;
         return true;
     }
+
+
 }
