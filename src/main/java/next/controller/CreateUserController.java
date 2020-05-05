@@ -14,6 +14,8 @@ import java.sql.SQLException;
 public class CreateUserController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(CreateUserController.class);
 
+    private UserDao userDao = UserDao.getInstance();
+
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         User user = new User(
@@ -22,8 +24,6 @@ public class CreateUserController extends AbstractController {
                 request.getParameter("name"),
                 request.getParameter("email"));
         log.debug("User : {}", user);
-
-        UserDao userDao = new UserDao();
 
         try {
             userDao.insert(user);

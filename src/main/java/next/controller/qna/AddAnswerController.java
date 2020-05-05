@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AddAnswerController extends AbstractController {
-    private AnswerDao answerDao = new AnswerDao();
+    private AnswerDao answerDao = AnswerDao.getInstance();
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

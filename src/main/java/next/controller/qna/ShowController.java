@@ -4,13 +4,14 @@ import core.mvc.AbstractController;
 import core.view.ModelAndView;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
+import next.model.Answer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ShowController extends AbstractController {
-    private AnswerDao answerDao = new AnswerDao();
-    private QuestionDao questionDao = new QuestionDao();
+    private AnswerDao answerDao = AnswerDao.getInstance();
+    private QuestionDao questionDao = QuestionDao.getInstance();
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

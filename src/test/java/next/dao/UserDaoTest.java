@@ -14,6 +14,8 @@ import core.jdbc.ConnectionManager;
 import next.model.User;
 
 public class UserDaoTest {
+    private UserDao userDao = UserDao.getInstance();
+
     @Before
     public void setup() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
@@ -24,7 +26,6 @@ public class UserDaoTest {
     @Test
     public void crud() throws Exception {
         User expected = new User("userId", "password", "name", "javajigi@email.com");
-        UserDao userDao = new UserDao();
         userDao.insert(expected);
         User actual = userDao.findByUserId(expected.getUserId());
         assertEquals(expected, actual);
@@ -37,7 +38,6 @@ public class UserDaoTest {
 
     @Test
     public void findAll() throws Exception {
-        UserDao userDao = new UserDao();
         User extra = new User("bang", "1234", "Kihyun", "roomEnergy@email.com");
         userDao.insert(extra);
         User actual = userDao.findByUserId(extra.getUserId());

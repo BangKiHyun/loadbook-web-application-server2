@@ -9,6 +9,15 @@ import java.sql.*;
 import java.util.List;
 
 public class QuestionDao {
+    private static QuestionDao questionDao = new QuestionDao();
+    private JdbcTemplate<Question> jdbcTemplate = JdbcTemplate.getInstance();
+
+    private QuestionDao() {}
+
+    public static QuestionDao getInstance(){
+        return questionDao;
+    }
+
     private RowMapper<Question> rowMapper = rs -> new Question(rs.getLong("questionId"),
             rs.getString("writer"),
             rs.getString("title"),
@@ -17,7 +26,6 @@ public class QuestionDao {
             rs.getInt("countOfAnswer"));
 
     public Question insert(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "INSERT INTO  (writer, title, contents, createdDate) VALUES (?, ?, ?, ?, ?)";
         PreparedStatementSetter pstmtSetter = pstmt -> {
             pstmt.setString(1, question.getWriter());
@@ -30,7 +38,6 @@ public class QuestionDao {
     }
 
     public void update(Question question){
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "UPDATE SET title = ?, contents = ? WHERE questionId = ?";
         PreparedStatementSetter pstmtSetter = pstmt -> {
             pstmt.setString(1, question.getTitle());
@@ -41,7 +48,6 @@ public class QuestionDao {
     }
 
     public Question findById(Long questionId) {
-        JdbcTemplate<Question> jdbcTemplate = new JdbcTemplate<>();
         String sql = "SELECT questionId, writer, title, contents, createdDate, countOfAnswer FORM QUESTIONS WHERE questionId = ?";
         PreparedStatementSetter pstmtSetter = pstmt -> pstmt.setLong(1, questionId);
 
@@ -49,7 +55,6 @@ public class QuestionDao {
     }
 
     public List<Question> findAll() {
-        JdbcTemplate<Question> jdbcTemplate = new JdbcTemplate<>();
         String sql = "SELECT * FROM QUESTIONS";
 
         return jdbcTemplate.query(sql, rowMapper);

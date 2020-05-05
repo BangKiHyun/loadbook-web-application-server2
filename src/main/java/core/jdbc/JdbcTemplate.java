@@ -1,6 +1,5 @@
 package core.jdbc;
 
-import next.model.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +12,14 @@ import java.util.List;
 
 public class JdbcTemplate<T> {
     private static final Logger log = LoggerFactory.getLogger(JdbcTemplate.class);
+
+    private static JdbcTemplate jdbcTemplate = new JdbcTemplate();//싱글톤 패턴
+
+    private JdbcTemplate() {} //생성자를 외부에서 사용 불가
+
+    public static JdbcTemplate getInstance() {
+        return jdbcTemplate;
+    }
 
     public void execute(String sql, PreparedStatementSetter pstmtSetter) throws DataAccessException {
         try (
