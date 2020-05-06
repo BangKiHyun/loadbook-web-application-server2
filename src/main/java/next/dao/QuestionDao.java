@@ -59,4 +59,12 @@ public class QuestionDao {
 
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public void delete(long questionId) {
+        String sql = "DELETE FROM QUESTION WHERE questionId = ?";
+        PreparedStatementSetter pstmtSetter = pstmt -> {
+            pstmt.setLong(1, questionId);
+        };
+        jdbcTemplate.execute(sql, pstmtSetter);
+    }
 }
