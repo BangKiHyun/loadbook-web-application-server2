@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModelAndView {
-    private VIew vIew;
+    private View view;
     private Map<String, Object> model = new HashMap<>();
 
-    public ModelAndView(VIew vIew) {
-        this.vIew = vIew;
+    public ModelAndView(View vIew) {
+        this.view = vIew;
     }
 
     public ModelAndView addObject(String attributeName, Object attributeValue) {
@@ -21,7 +21,7 @@ public class ModelAndView {
         return Collections.unmodifiableMap(model);
     }
 
-    public VIew getvIew() {
-        return vIew;
+    public View getView() {
+        return view;
     }
 }

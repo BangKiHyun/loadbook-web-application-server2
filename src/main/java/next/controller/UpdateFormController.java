@@ -1,11 +1,7 @@
 package next.controller;
 
-import core.db.DataBase;
 import core.mvc.AbstractController;
-import core.mvc.Controller;
-import core.view.JspView;
 import core.view.ModelAndView;
-import core.view.VIew;
 import next.dao.UserDao;
 import next.model.User;
 import next.util.UserSessionUtils;

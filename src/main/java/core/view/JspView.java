@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Set;
 
-public class JspView implements VIew {
+public class JspView implements View {
     private static final String DEFAULT_REDIRECT_PREFIX = "redirect:";
 
     private String viewName;
