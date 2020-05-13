@@ -1,9 +1,7 @@
 package core.mvc;
 
 import com.google.common.collect.Lists;
-import core.nmvc.AnnotationHandlerMapping;
-import core.nmvc.HandlerExecution;
-import core.nmvc.HandlerMapping;
+import core.nmvc.*;
 import core.view.ModelAndView;
 import core.view.View;
 import org.slf4j.Logger;
@@ -22,18 +20,21 @@ public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(DispatcherServlet.class);
 
-    private List<HandlerMapping> mappings = Lists.newArrayList();
+    private List<AnnotationHandlerMapping> mappings = Lists.newArrayList();
+    private List<HandlerAdapter> handlerAdapters = Lists.newArrayList();
 
     @Override
     public void init() throws ServletException {
         LegacyHadlerMapping lhm = new LegacyHadlerMapping();
         lhm.init();
-        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping("next.controller");
 
+        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping("next.controller");
         ahm.initialize();
 
-        mappings.add(lhm);
         mappings.add(ahm);
+
+        handlerAdapters.add(new ControllerHandlerAdapter());
+        handlerAdapters.add(new HandlerExecutionHandlerAdapter());
     }
 
     @Override
@@ -64,10 +65,11 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private ModelAndView execute(Object handler, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (handler instanceof Controller) {
-            return (((Controller) handler).execute(request, response));
-        } else {
-            return ((HandlerExecution) handler).handle(request, response);
+        for (HandlerAdapter handlerAdapter : handlerAdapters) {
+            if (handlerAdapter.supports(handler)) {
+                return handlerAdapter.handle(request, response, handler);
+            }
         }
+        return null;
     }
 }
