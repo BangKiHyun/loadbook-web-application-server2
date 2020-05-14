@@ -2,7 +2,6 @@ package next.controller;
 
 import core.mvc.AbstractController;
 import core.view.ModelAndView;
-import next.dao.QuestionDao;
 import next.dao.UserDao;
 import next.model.User;
 

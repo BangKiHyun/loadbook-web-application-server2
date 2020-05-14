@@ -2,8 +2,8 @@ package next.controller.qna;
 
 import core.mvc.AbstractController;
 import core.view.ModelAndView;
-import next.dao.AnswerDao;
-import next.dao.QuestionDao;
+import next.dao.JdbcAnswerDao;
+import next.dao.JdbcQuestionDao;
 import next.service.QnaService;
 import next.util.UserSessionUtils;
 
@@ -11,9 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class DeleteQuestionController extends AbstractController {
-    private QuestionDao questionDao = QuestionDao.getInstance();
-    private AnswerDao answerDao = AnswerDao.getInstance();
-    private QnaService qnaService = QnaService.getInstance();
+private QnaService qnaService = QnaService.getInstance(JdbcQuestionDao.getInstance(), JdbcAnswerDao.getInstance());
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -27,8 +25,8 @@ public class DeleteQuestionController extends AbstractController {
             return jspView("redirect:/");
         } catch (Exception e) {
             return jspView("show.jsp")
-                    .addObject("question", questionDao.findById(questionId))
-                    .addObject("answers", answerDao.findAllByQuestionId(questionId))
+                    .addObject("question", qnaService.findById(questionId))
+                    .addObject("answers", qnaService.findAllByQuestionId(questionId))
                     .addObject("errorMessage", e.getMessage());
         }
     }
