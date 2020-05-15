@@ -2,14 +2,22 @@ package next.controller.qna;
 
 import core.mvc.AbstractController;
 import core.view.ModelAndView;
+import next.dao.AnswerDao;
 import next.dao.JdbcAnswerDao;
+import next.dao.QuestionDao;
 import next.model.Answer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AddAnswerController extends AbstractController {
-    private JdbcAnswerDao answerDao = JdbcAnswerDao.getInstance();
+    private QuestionDao questionDao;
+    private AnswerDao answerDao;
+
+    public AddAnswerController(QuestionDao questionDao, AnswerDao answerDao) {
+        this.questionDao = questionDao;
+        this.answerDao = answerDao;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

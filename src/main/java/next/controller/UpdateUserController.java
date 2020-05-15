@@ -13,7 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class UpdateUserController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(UpdateUserController.class);
-    private UserDao userDao = UserDao.getInstance();
+
+    private UserDao userDao;
+
+    public UpdateUserController(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

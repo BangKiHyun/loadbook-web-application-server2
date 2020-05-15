@@ -7,14 +7,7 @@ import java.sql.*;
 import java.util.List;
 
 public class JdbcAnswerDao implements AnswerDao{
-    private static JdbcAnswerDao answerDao = new JdbcAnswerDao();
     private JdbcTemplate<Answer> jdbcTemplate = JdbcTemplate.getInstance();
-
-    private JdbcAnswerDao() {}
-
-    public static JdbcAnswerDao getInstance(){
-        return answerDao;
-    }
 
     @Override
     public Answer insert(Answer answer) {

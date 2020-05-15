@@ -14,7 +14,11 @@ import java.sql.SQLException;
 public class CreateUserController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(CreateUserController.class);
 
-    private UserDao userDao = UserDao.getInstance();
+    private UserDao userDao;
+
+    public CreateUserController(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {

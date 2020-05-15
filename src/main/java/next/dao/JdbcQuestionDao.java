@@ -9,14 +9,7 @@ import java.sql.*;
 import java.util.List;
 
 public class JdbcQuestionDao implements QuestionDao{
-    private static JdbcQuestionDao questionDao = new JdbcQuestionDao();
     private JdbcTemplate<Question> jdbcTemplate = JdbcTemplate.getInstance();
-
-    private JdbcQuestionDao() {}
-
-    public static JdbcQuestionDao getInstance(){
-        return questionDao;
-    }
 
     private RowMapper<Question> rowMapper = rs -> new Question(rs.getLong("questionId"),
             rs.getString("writer"),

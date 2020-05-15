@@ -14,14 +14,7 @@ import java.util.List;
 
 //Data Access Object, 주로 데이터베이스에 대한 접근 로직 처리를 담당 하는 객체
 public class UserDao {
-    private static UserDao userDao = new UserDao();
     private JdbcTemplate<User> jdbcTemplate = JdbcTemplate.getInstance();
-
-    private UserDao() {}
-
-    public static UserDao getInstance() {
-        return userDao;
-    }
 
     private static final Logger log = LoggerFactory.getLogger(UserDao.class);
 
