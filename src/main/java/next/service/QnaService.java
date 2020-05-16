@@ -22,18 +22,9 @@ public class QnaService {
 
     public void deleteQuestion(long questionId, User user) throws Exception {
         Question question = questionDao.findById(questionId);
-        if (question == null) {
-            throw new NullPointerException("존재하지 않는 질문입니다.");
-        }
-
-        if (!question.isSameUser(user)) {
-            throw new IllegalAccessException("다른 사용자가 쓴 글을 삭제할 수 없습니다.");
-        }
-
         List<Answer> answers = answerDao.findAllByQuestionId(questionId);
-        if (answers.isEmpty()) {
+        if (question.canDelete(user, answers)) {
             questionDao.delete(questionId);
-            return;
         }
 
         boolean canDelete = true;

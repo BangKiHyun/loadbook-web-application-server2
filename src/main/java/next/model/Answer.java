@@ -1,6 +1,5 @@
 package next.model;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 public class Answer {
@@ -48,6 +47,10 @@ public class Answer {
 
     public long getQuestionId() {
         return questionId;
+    }
+
+    public boolean canDelete(User user) {
+        return user.isSameUser(this.writer);
     }
 
     @Override

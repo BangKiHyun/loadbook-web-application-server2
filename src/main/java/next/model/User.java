@@ -37,13 +37,13 @@ public class User {
         this.email = updateUser.email;
     }
 
-    public boolean matchPassword(String password){
-        if(password == null) return false;
+    public boolean matchPassword(String password) {
+        if (password == null) return false;
 
         return this.password.equals(password);
     }
 
-    public boolean isSameUser(User user){
+    public boolean isSameUser(User user) {
         return userId.equals(user.getUserId());
     }
 
