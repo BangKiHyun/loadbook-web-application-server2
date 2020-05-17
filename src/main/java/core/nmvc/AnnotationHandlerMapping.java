@@ -4,6 +4,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import core.annotation.RequestMapping;
 import core.annotation.RequestMethod;
+import core.di.factory.BeanFactory;
+import core.di.factory.BeanScanner;
 import core.util.ControllerScanner;
 import org.reflections.ReflectionUtils;
 import org.slf4j.Logger;
@@ -14,22 +16,25 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 
-public class AnnotationHandlerMapping implements HandlerMapping{
+public class AnnotationHandlerMapping implements HandlerMapping {
     private static final Logger log = LoggerFactory.getLogger(AnnotationHandlerMapping.class);
 
     private Object[] basePackage;
 
     private Map<HandlerKey, HandlerExecution> handlerExecutions = Maps.newHashMap();
 
-    public AnnotationHandlerMapping(Object... basePackage){
+    public AnnotationHandlerMapping(Object... basePackage) {
         this.basePackage = basePackage;
     }
 
     public void initialize() {
-        ControllerScanner controllerScanner = new ControllerScanner(basePackage);
-        Map<Class<?>, Object> controllers = controllerScanner.getControllers();
+        BeanScanner scanner = new BeanScanner(basePackage);
+        BeanFactory beanFactory = new BeanFactory(scanner.scan());
+        beanFactory.initialize();
+        Map<Class<?>, Object> controllers = beanFactory.getControllers();
+
         Set<Method> methods = getRequestMappingMethods(controllers.keySet());
-        for(Method method : methods){
+        for (Method method : methods) {
             RequestMapping rm = method.getAnnotation(RequestMapping.class);
             log.debug("register handlerExecution : url is {}, method is {}", rm.value(), method);
             handlerExecutions.put(createHandlerKey(rm), new HandlerExecution(
@@ -42,16 +47,16 @@ public class AnnotationHandlerMapping implements HandlerMapping{
     }
 
     @SuppressWarnings("unchecked")
-    private Set<Method> getRequestMappingMethods(Set<Class<?>> controllers){
+    private Set<Method> getRequestMappingMethods(Set<Class<?>> controllers) {
         Set<Method> requestMappingMethods = Sets.newHashSet();
-        for(Class<?> clazz : controllers){
+        for (Class<?> clazz : controllers) {
             requestMappingMethods.addAll(ReflectionUtils.getAllMethods(clazz,
                     ReflectionUtils.withAnnotation(RequestMapping.class)));
         }
         return requestMappingMethods;
     }
 
-    public HandlerExecution getHandler(HttpServletRequest request){
+    public HandlerExecution getHandler(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
         RequestMethod rm = RequestMethod.valueOf(request.getMethod().toUpperCase());
         log.debug("requestUri : {}, requestMethod : {}", requestUri, rm);
